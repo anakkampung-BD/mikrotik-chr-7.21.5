@@ -1,0 +1,6 @@
+.git
+.gitignore
+README.md
+*.md
+chr-7.24.1.vmdk.zip
+/data

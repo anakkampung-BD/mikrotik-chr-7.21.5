@@ -1,0 +1,21 @@
+# Image disk CHR (128 MB — tidak di-push ke GitHub, sudah ada di Docker Hub)
+chr-7.21.5.img
+*.img
+*.vmdk
+*.vmdk.zip
+*.qcow2
+
+# Data runtime
+/data/
+chr-data/
+
+# Secret & env lokal
+.env
+*.token
+*.pem
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/

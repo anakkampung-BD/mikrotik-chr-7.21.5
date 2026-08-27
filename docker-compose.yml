@@ -1,0 +1,25 @@
+services:
+  chr:
+    build: .
+    image: mikrotik-chr:7.21.5
+    container_name: mikrotik-chr
+    restart: unless-stopped
+    ports:
+      - "2222:22"      # SSH
+      - "8080:80"      # WebFig HTTP
+      - "8443:443"     # WebFig HTTPS
+      - "8291:8291"    # Winbox
+      - "8728:8728"    # API
+      - "8729:8729"    # API-SSL
+    environment:
+      RAM_MB: "4096"
+      SMP: "4"
+    volumes:
+      - chr-data:/data
+    # Host ini VPS OpenStack tanpa nested KVM — QEMU memakai TCG (lambat tapi jalan).
+    # Jika /dev/kvm tersedia di host, aktifkan agar boot jauh lebih cepat:
+    # devices:
+    #   - /dev/kvm:/dev/kvm
+
+volumes:
+  chr-data:

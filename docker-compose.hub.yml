@@ -1,0 +1,24 @@
+# Jalankan langsung dari image Docker Hub (tanpa build lokal)
+services:
+  chr:
+    image: lsiribere/mikrotik-chr:7.21.5
+    container_name: mikrotik-chr
+    restart: unless-stopped
+    ports:
+      - "2222:22"
+      - "8080:80"
+      - "8443:443"
+      - "8291:8291"
+      - "8728:8728"
+      - "8729:8729"
+    environment:
+      RAM_MB: "4096"
+      SMP: "4"
+    volumes:
+      - chr-data:/data
+    # Aktifkan jika host mendukung nested KVM (boot jauh lebih cepat):
+    # devices:
+    #   - /dev/kvm:/dev/kvm
+
+volumes:
+  chr-data:
