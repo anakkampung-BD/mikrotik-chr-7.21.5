@@ -7,10 +7,13 @@ services:
     ports:
       - "2222:22"      # SSH
       - "8080:80"      # WebFig HTTP
-      - "8443:443"     # WebFig HTTPS
+      - "8443:443"     # WebFig HTTPS / SSTP
       - "8291:8291"    # Winbox
       - "8728:8728"    # API
       - "8729:8729"    # API-SSL
+      - "500:500/udp"  # IPsec IKE
+      - "4500:4500/udp" # IPsec NAT-T
+      - "1701:1701/udp" # L2TP
     environment:
       RAM_MB: "4096"
       SMP: "4"

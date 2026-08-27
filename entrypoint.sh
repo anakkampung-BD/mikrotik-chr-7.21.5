@@ -54,6 +54,10 @@ HOSTFWD=(
   hostfwd=tcp::8291-:8291
   hostfwd=tcp::8728-:8728
   hostfwd=tcp::8729-:8729
+  # L2TP/IPsec VPN
+  hostfwd=udp::500-:500
+  hostfwd=udp::4500-:4500
+  hostfwd=udp::1701-:1701
 )
 
 NETDEV_OPTS=$(IFS=,; echo "${HOSTFWD[*]}")
