@@ -6,6 +6,7 @@ RUN apt-get update \
     qemu-system-x86 \
     qemu-utils \
     ovmf \
+    socat \
     ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 

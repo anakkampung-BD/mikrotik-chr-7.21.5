@@ -1,0 +1,13 @@
+services:
+  vpn-bot:
+    build: ./vpn-bot
+    container_name: vpn-bot
+    restart: unless-stopped
+    env_file: ./vpn-bot/.env
+    volumes:
+      - vpn-bot-data:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  vpn-bot-data:

@@ -11,6 +11,7 @@ chr-data/
 
 # Secret & env lokal
 .env
+vpn-bot/.env
 *.token
 *.pem
 

@@ -1,0 +1,3 @@
+python-telegram-bot==21.6
+librouteros==3.2.1
+python-dotenv==1.0.1

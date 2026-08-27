@@ -14,6 +14,7 @@ services:
       - "500:500/udp"  # IPsec IKE
       - "4500:4500/udp" # IPsec NAT-T
       - "1701:1701/udp" # L2TP
+      - "10000-10999:10000-10999/tcp" # VPN remote access (dst-nat dinamis)
     environment:
       RAM_MB: "4096"
       SMP: "4"
