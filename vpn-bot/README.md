@@ -62,7 +62,7 @@ public_port = 10000 + (user_slot × 10) + service_index
 | 3 | Ssh | 22 |
 | 4 | API | 8728 |
 
-Contoh user slot 5: Winbox → `your.vps.ip.or.domain:10052`
+Contoh user slot 5: Winbox → `<IP-VPS>:10052`
 
 ## Firewall VPS / Cloud
 
