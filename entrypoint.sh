@@ -4,6 +4,8 @@ set -euo pipefail
 CHR_BASE_IMG="${CHR_BASE_IMG:-/opt/chr/chr.img}"
 DATA_DIR="${DATA_DIR:-/data}"
 DISK_IMG="${DATA_DIR}/chr-disk.img"
+APPS_DISK_IMG="${DATA_DIR}/chr-apps.img"
+APPS_DISK_SIZE="${APPS_DISK_SIZE:-20G}"
 RAM_MB="${RAM_MB:-512}"
 SMP="${SMP:-1}"
 
@@ -27,6 +29,12 @@ fi
 if [[ ! -f "${DISK_IMG}" ]]; then
   echo "[chr] Menyalin image CHR ke volume data (raw)..."
   cp -f "${CHR_BASE_IMG}" "${DISK_IMG}"
+fi
+
+# Disk kedua untuk RouterOS Apps/Containers (ext4 via /disk)
+if [[ ! -f "${APPS_DISK_IMG}" ]]; then
+  echo "[chr] Membuat disk Apps ${APPS_DISK_SIZE} di ${APPS_DISK_IMG}..."
+  qemu-img create -f raw "${APPS_DISK_IMG}" "${APPS_DISK_SIZE}"
 fi
 
 if [[ ! -f "${OVMF_VARS}" ]]; then
@@ -58,13 +66,21 @@ HOSTFWD=(
   hostfwd=udp::500-:500
   hostfwd=udp::4500-:4500
   hostfwd=udp::1701-:1701
+  # Zabbix App
+  hostfwd=tcp::8081-:8081
+  hostfwd=tcp::10050-:10050
+  hostfwd=tcp::10051-:10051
+  # Pi-hole App
+  hostfwd=tcp::8085-:8085
+  hostfwd=udp::53-:53
+  hostfwd=tcp::53-:53
 )
 NETDEV_OPTS=$(IFS=,; echo "${HOSTFWD[*]}")
 
 start_port_forwarders() {
   echo "[chr] Menyiapkan socat forward ${PORT_FWD_START}-${PORT_FWD_END} → ${GUEST_IP}..."
   for port in $(seq "$PORT_FWD_START" "$PORT_FWD_END"); do
-    socat "TCP-LISTEN:${port},fork,reuseaddr" "TCP:${GUEST_IP}:${port}" &
+    socat "TCP-LISTEN:${port},fork,reuseaddr" "TCP:${GUEST_IP}:${port}" >/dev/null 2>&1 &
   done
 }
 
@@ -87,6 +103,8 @@ wait_for_guest() {
 }
 
 echo "[chr] Menjalankan RouterOS CHR (UEFI/OVMF)..."
+echo "[chr] Disk sistem: ${DISK_IMG}"
+echo "[chr] Disk Apps : ${APPS_DISK_IMG} (${APPS_DISK_SIZE})"
 echo "[chr] Akses: Winbox :8291 | WebFig :8080/:8443 | SSH :2222"
 echo "[chr] VPN ports: ${PORT_FWD_START}-${PORT_FWD_END}/tcp"
 
@@ -98,6 +116,7 @@ qemu-system-x86_64 \
   -drive "if=pflash,format=raw,readonly=on,file=${OVMF_CODE}" \
   -drive "if=pflash,format=raw,file=${OVMF_VARS}" \
   -drive "file=${DISK_IMG},format=raw,if=virtio" \
+  -drive "file=${APPS_DISK_IMG},format=raw,if=virtio" \
   -netdev "user,id=net0,${NETDEV_OPTS}" \
   -device virtio-net-pci,netdev=net0 \
   -nographic \

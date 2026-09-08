@@ -170,6 +170,9 @@ Setelah container running dan CHR selesai boot:
 | **WebFig HTTP** | `http://<IP-HOST>:8080` |
 | **WebFig HTTPS** | `https://<IP-HOST>:8443` |
 | **API** | `<IP-HOST>:8728` |
+| **Zabbix UI** | `http://<IP-HOST>:8081` |
+| **Pi-hole UI** | `http://<IP-HOST>:8085/admin` |
+| **Pi-hole DNS** | `<IP-HOST>:53` |
 
 ### Login default CHR
 
@@ -199,19 +202,30 @@ IP di interface `ether1` **bukan** dari Docker bridge. CHR mendapat IP dari **QE
 | `SMP` | `1` | Jumlah vCPU |
 | `DATA_DIR` | `/data` | Lokasi persist disk |
 | `CHR_BASE_IMG` | `/opt/chr/chr.img` | Image dasar (di dalam container) |
+| `APPS_DISK_SIZE` | `20G` | Ukuran disk kedua untuk RouterOS Apps/Containers |
 
 ### Port mapping
 
 Port di **host** → port di **guest CHR**:
 
 ```
-2222 → 22    (SSH)
-8080 → 80    (WebFig HTTP)
-8443 → 443   (WebFig HTTPS)
-8291 → 8291  (Winbox)
-8728 → 8728  (API)
-8729 → 8729  (API-SSL)
+2222 → 22     (SSH)
+8080 → 80     (WebFig HTTP)
+8443 → 443    (WebFig HTTPS)
+8291 → 8291   (Winbox)
+8728 → 8728   (API)
+8729 → 8729   (API-SSL)
+8081 → 8081   (Zabbix Web UI)
+10050 → 10050 (Zabbix Agent)
+10051 → 10051 (Zabbix Server)
+8085 → 8085   (Pi-hole Web UI)
+53   → 53     (Pi-hole DNS TCP/UDP)
+10000-10999 → 10000-10999 (VPN remote access dinamis)
 ```
+
+### Disk Apps (RouterOS `/app`)
+
+Container membuat disk kedua `chr-apps.img` (virtio) di volume `/data` untuk menyimpan image/container App. Setelah boot, format sebagai ext4 dan set di `/app settings` (lihat `scripts/setup-apps-disk.rsc`).
 
 ### Aktifkan KVM (jika tersedia)
 

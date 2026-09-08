@@ -14,10 +14,17 @@ services:
       - "500:500/udp"  # IPsec IKE
       - "4500:4500/udp" # IPsec NAT-T
       - "1701:1701/udp" # L2TP
+      - "8081:8081"    # Zabbix Web UI
+      - "10050:10050"  # Zabbix Agent
+      - "10051:10051"  # Zabbix Server
+      - "8085:8085"    # Pi-hole Web UI
+      - "53:53/udp"    # Pi-hole DNS
+      - "53:53/tcp"    # Pi-hole DNS
       - "10000-10999:10000-10999/tcp" # VPN remote access (dst-nat dinamis)
     environment:
       RAM_MB: "4096"
       SMP: "4"
+      APPS_DISK_SIZE: "20G"
     volumes:
       - chr-data:/data
     # Host ini VPS OpenStack tanpa nested KVM — QEMU memakai TCG (lambat tapi jalan).

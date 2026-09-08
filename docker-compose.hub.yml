@@ -14,10 +14,17 @@ services:
       - "500:500/udp"
       - "4500:4500/udp"
       - "1701:1701/udp"
+      - "8081:8081"
+      - "10050:10050"
+      - "10051:10051"
+      - "8085:8085"
+      - "53:53/udp"
+      - "53:53/tcp"
       - "10000-10999:10000-10999/tcp"
     environment:
       RAM_MB: "4096"
       SMP: "4"
+      APPS_DISK_SIZE: "20G"
     volumes:
       - chr-data:/data
     # Aktifkan jika host mendukung nested KVM (boot jauh lebih cepat):

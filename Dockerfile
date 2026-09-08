@@ -19,12 +19,13 @@ RUN chmod +x /entrypoint.sh \
 
 VOLUME ["/data"]
 
-# SSH, WebFig, Winbox, API
-EXPOSE 22 80 443 8291 8728 8729
+# SSH, WebFig, Winbox, API, Zabbix, Pi-hole DNS/UI
+EXPOSE 22 80 443 8291 8728 8729 8081 10050 10051 8085 53
 
 ENV RAM_MB=512 \
     SMP=1 \
     DATA_DIR=/data \
-    CHR_BASE_IMG=/opt/chr/chr.img
+    CHR_BASE_IMG=/opt/chr/chr.img \
+    APPS_DISK_SIZE=20G
 
 ENTRYPOINT ["/entrypoint.sh"]
